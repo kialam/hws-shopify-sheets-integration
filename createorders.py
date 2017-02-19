@@ -84,22 +84,31 @@ def main():
         
     for row in rows:
         email_list = row[0].split(',')
-        item_list = row[1].split(',')
-        price_list = row[2].split(',')
-        quantity_list = row[3].split(',')
+        id_list = row[1].split(',')
+        item_list = row[2].split(',')
+        price_list = row[3].split(',')
+        quantity_list = row[4].split(',')
 
         line_items = [{ "title": item, "price": int(price), "quantity": quantity } for item, price, quantity in zip(item_list, price_list, quantity_list)]
 
-        order = {"email": email_list[0], "send_receipt": True, "line_items": line_items }
+        order = {"email": email_list[0], "send_receipt": True, "customer": { "id": id_list[0] },  "use_customer_default_address": True, "line_items": line_items }
     
-        # Create Shopify Orders
-        order_url = "https://%s:%s@%s.myshopify.com/admin/orders.json" % (API_KEY, PASSWORD, SHOP_NAME)
-        payload = {'order': order}
+        # Create Draft Orders
+        order_url = "https://%s:%s@%s.myshopify.com/admin/draft_orders.json" % (API_KEY, PASSWORD, SHOP_NAME)
+        payload = {"draft_order": order}
         headers = {'content-type': 'application/json'}
         response = requests.post(order_url, data=json.dumps(payload), headers=headers)
         json_data = json.loads(response.content)
 
-        print(json_data)
+        # Send invoices
+        order_id = json_data['draft_order']['id']
+        invoice_url = "https://%s:%s@%s.myshopify.com/admin/draft_orders/%s/send_invoice.json" % (API_KEY, PASSWORD, SHOP_NAME, order_id)
+        invoice_data = { "subject": "HWS INVOICE YEAAAAHHHH BOI!", "custom_message": "Boom." }
+        invoice_payload = {"draft_order_invoice": invoice_data}
+        invoice_headers = {'content-type': 'application/json'}
+        invoice_response = requests.post(invoice_url, data=json.dumps(invoice_payload), headers=invoice_headers)
+        invoice_response_json = json.loads(invoice_response.content)
 
+        print(invoice_response_json)
 if __name__ == '__main__':
     main()

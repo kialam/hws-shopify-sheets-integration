@@ -50,7 +50,7 @@ json_data = json.loads(response.content)
 
 # Save Order details into python dictionary to send to Google Sheets API
 ordersData = []
-orderDetails = ['Last Updated', 'Email', 'IP', 'Title', 'Properties']
+orderDetails = ['Last Updated', 'Email', 'Customer ID', 'IP', 'Title', 'Properties']
 # orderDetails = ['Email', 'IP', 'Title', 'Name1', 'Value1', 'Name2', 'Value2', 'Name3', 'Value3', 'Name4', 'Value4', 'Name5', 'Value5']
 ordersData += [orderDetails]
 
@@ -68,8 +68,8 @@ for i in json_data['orders']:
                 # no email
                 print('No email for order')
                 email = 'No email for order'
-
-            ordersData.append([lastUpdated, email, ip, title, properties])
+            customer_id = i['customer']['id']
+            ordersData.append([lastUpdated, email, customer_id, ip, title, properties])
 
 dataToInsert = { 'values': ordersData }
 
