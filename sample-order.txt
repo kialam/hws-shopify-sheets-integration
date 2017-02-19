@@ -1,0 +1,20 @@
+POST /admin/orders.json
+{
+  "order": {
+    "email": "foo@example.com",
+    "send_receipt": true,
+    "line_items": [
+      {
+        "title": "Blue Suede Shoes",
+        "price": 85.95,
+        "quantity": 1,
+        "taxable": false
+      },
+      {
+        "title": "Raspberry Beret",
+        "price": 19.99,
+        "quantity": 2
+      }
+    ]
+  }
+}
