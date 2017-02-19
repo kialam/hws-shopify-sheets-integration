@@ -60,14 +60,6 @@ for i in json_data['orders']:
         if 'Create/Update Event Entry' in line['title']:
             lastUpdated = i['updated_at']
             title = line['title']
-            # for item in line['properties']:
-                # for key, val in item.items():
-                    # vals = "{0}:{1}".format(key, val)
-                    # ordersData.append([vals])
-                    # print("{0}:{1}".format(key, val))
-                    # ordersData[3:] = key
-                    # ordersData[4:] = val
-                # properties = str(item)
             properties = str(line['properties'])
             ip = i['client_details']['browser_ip']
             try:
@@ -78,12 +70,6 @@ for i in json_data['orders']:
                 email = 'No email for order'
 
             ordersData.append([lastUpdated, email, ip, title, properties])
-
-            # for item in line['properties']:
-                # print(item)
-                # for key, val in item.items():
-                    # ordersData.append(key)
-
 
 dataToInsert = { 'values': ordersData }
 
@@ -126,12 +112,6 @@ def main():
                     'version=v4')
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
-
-    # data = {'properties': {'title': 'Hunger Work Studio Orders [%s]' % time.ctime()}}
-    # res = service.spreadsheets().create(body=data).execute()
-    # SHEET_ID = res['spreadsheetId']
-    # print('Created "%s"' % res['properties']['title'])
-    # print(SHEET_ID)
     
     data = dataToInsert
     
