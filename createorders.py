@@ -88,11 +88,12 @@ def main():
         item_list = row[2].split(',')
         price_list = row[3].split(',')
         quantity_list = row[4].split(',')
+        shipping_list = row[5].split(',')
 
         line_items = [{ "title": item, "price": int(price), "quantity": quantity } for item, price, quantity in zip(item_list, price_list, quantity_list)]
 
-        order = {"email": email_list[0], "send_receipt": True, "customer": { "id": id_list[0] },  "use_customer_default_address": True, "line_items": line_items }
-    
+        order = {"email": email_list[0], "send_receipt": True, "customer": { "id": id_list[0] },  "use_customer_default_address": True, "shipping_line": {"title": "Custom Shipping", "price":shipping_list[0], "handle": ""}, "line_items": line_items }
+
         # Create Draft Orders
         order_url = "https://%s:%s@%s.myshopify.com/admin/draft_orders.json" % (API_KEY, PASSWORD, SHOP_NAME)
         payload = {"draft_order": order}
